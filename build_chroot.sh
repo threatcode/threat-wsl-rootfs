@@ -5,7 +5,7 @@ set -e
 BUILDIR=$(pwd)
 TMPDIR=$(mktemp -d)
 TMPDIR_ARM64=$(mktemp -d)
-
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 create_x64_rootfs() {
 cd $TMPDIR
