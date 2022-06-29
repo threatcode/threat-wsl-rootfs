@@ -12,10 +12,9 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 create_rootfs() {
   ARCH=${1:-x64}
 
-  echo -e "\n  [i] Boostrapping a base Kali install ($ARCH)"
+  echo -e "\n  [i] Bootstrapping a base Kali install ($ARCH)"
   if [ "$ARCH" == "ARM64" ]; then
     cd "$TMPDIR_ARM64/"
-
     ## Because we're using a foreign architecture (arm64 on amd64) we have to do the debootstrap in 2 stages
     LANG=C debootstrap --foreign --arch arm64 kali-rolling ./kali-root "http://$MIRROR_REPO/kali"
     cp -v /usr/bin/qemu-aarch64-static kali-root/usr/bin
