@@ -10,7 +10,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 create_x64_rootfs() {
 cd $TMPDIR
 
-echo "[*] Boostrapping a base Kali install"
+echo "[*] Bootstrapping a base Kali install"
 
 LANG=C debootstrap kali-rolling ./kali-root http://http.kali.org/kali
 
