@@ -89,7 +89,7 @@ deb http://http.kali.org/kali kali-rolling main non-free contrib
 EOF
 
   echo -e "\n  [i] Setting shell profile"
-  cat << EOF > kali-root/etc/profile
+  cat << 'EOF' > kali-root/etc/profile
 # /etc/profile: system-wide .profile file for the Bourne shell (sh(1))
 # and Bourne compatible shells (bash(1), ksh(1), ash(1), ...).
 
