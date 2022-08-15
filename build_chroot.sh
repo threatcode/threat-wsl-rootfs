@@ -88,6 +88,8 @@ deb http://http.kali.org/kali kali-rolling main non-free contrib
 #deb-src http://http.kali.org/kali kali-rolling main non-free contrib
 EOF
 
+## Gamb1t 8/15/22: Do not remove the `'` around EOF. This will cause errors in a built image.
+
   echo -e "\n  [i] Setting shell profile"
   cat << 'EOF' > kali-root/etc/profile
 # /etc/profile: system-wide .profile file for the Bourne shell (sh(1))
