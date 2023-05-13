@@ -13,7 +13,7 @@ Make sure that the git repository is cloned locally:
 
 ```console
 $ sudo apt install -y git
-$ git clone https://gitlab.com/kalilinux/build-scripts/kali-wsl-chroot.git
+$ git clone https://gitlab.com/kalilinux/build-scripts/kali-wsl-rootfs.git
 $ cd kali-wsl-rootfs/
 ```
 
