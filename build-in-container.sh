@@ -19,7 +19,7 @@ SUDO=
 if [ -t 1 ] && [ -t 2 ]; then
   b() { tput bold; echo -n "$@"; tput sgr0; }
 else
-  b() { tput bold; echo -n "$@"; tput sgr0; }
+  b() { echo "$@"; }
 fi
 ## Last program in this script should use exec
 vexec() { b "# $@"; echo; exec "$@"; }
