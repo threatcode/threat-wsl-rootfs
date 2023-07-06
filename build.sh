@@ -285,7 +285,7 @@ EOF
   vrun pushd "${rootfsDir}/"
   ## Skipping tar -v: too noisy
   ## Skipping tar -C "${rootfsDir}"/ / --exclude=./: Due './' being added (tar -tvfj output/*tar.gz | sort -k 9 | head)
-  vrun tar --ignore-failed-read -czf "${OUTDIR}/${OUTPUT}.tar.gz" ./"*"
+  vrun tar --ignore-failed-read --xattrs -czf "${OUTDIR}/${OUTPUT}.tar.gz" ./"*"
   vrun popd
 
   if ! "${KEEP}"; then
