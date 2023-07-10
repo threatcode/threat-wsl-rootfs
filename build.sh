@@ -233,7 +233,7 @@ fi
 EOF
 
   rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install kali-defaults # Skipping: --no-install-recommends
-  rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install locales-all mlocate sudo net-tools wget host dnsutils whois curl # Should be in a kali-meta
+  rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install kali-linux-wsl
 
   [ "${TOOLSET}" != "none" ] && \
     rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install kali-linux-${TOOLSET}
