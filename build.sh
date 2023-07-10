@@ -12,8 +12,7 @@ set -eu
 
 KNOWN_CACHING_PROXIES="\
 3142 apt-cacher-ng
-8000 squid-deb-proxy
-9999 approx"
+8000 squid-deb-proxy"
 DETECTED_CACHING_PROXY=
 
 SUPPORTED_ARCHITECTURES="amd64 arm64"
