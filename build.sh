@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# ./0.sh
-# http_proxy= ./0.sh
+# ./$0
+# http_proxy= ./$0
 #
 # REF:
 # - https://gitlab.com/kalilinux/build-scripts/kali-docker/-/blob/master/build-rootfs.sh
