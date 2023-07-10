@@ -232,7 +232,7 @@ if [ -d /etc/profile.d ]; then
 fi
 EOF
 
-  rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install kali-defaults # Skipping: --no-install-recommends
+ #rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install kali-defaults # Skipping: --no-install-recommends
   rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install kali-linux-wsl
 
   [ "${TOOLSET}" != "none" ] && \
