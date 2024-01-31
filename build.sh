@@ -4,8 +4,8 @@
 # http_proxy= ./$0
 #
 # REF:
-# - https://gitlab.com/kalilinux/build-scripts/kali-docker/-/blob/master/build-rootfs.sh
-# - https://gitlab.com/kalilinux/nethunter/build-scripts/kali-nethunter-project/-/blob/master/nethunter-fs/stages/stage1
+# - https://github.com/threatcode/build-scripts/threat-docker/-/blob/master/build-rootfs.sh
+# - https://github.com/threatcode/nethunter/build-scripts/threat-nethunter-project/-/blob/master/nethunter-fs/stages/stage1
 #
 
 set -eu
@@ -16,14 +16,14 @@ KNOWN_CACHING_PROXIES="\
 DETECTED_CACHING_PROXY=
 
 SUPPORTED_ARCHITECTURES="amd64 arm64"
-SUPPORTED_BRANCHES="kali-rolling kali-dev kali-last-snapshot"
+SUPPORTED_BRANCHES="threat-rolling threat-dev threat-last-snapshot"
 SUPPORTED_DESKTOPS="e17 gnome i3 kde lxde mate xfce none"
 SUPPORTED_TOOLSETS="default everything headless large none"
 
 DEFAULT_ARCH=amd64
-DEFAULT_BRANCH=kali-rolling
+DEFAULT_BRANCH=threat-rolling
 DEFAULT_DESKTOP=none
-DEFAULT_MIRROR=http://http.kali.org/kali
+DEFAULT_MIRROR=http://threatcode.github.io/threat
 DEFAULT_TOOLSET=none
 
 ARCH=
@@ -39,7 +39,7 @@ OUTDIR="$( pwd )/output"
 PROMPT=#
 
 default_toolset() { [ ${DESKTOP:-$DEFAULT_DESKTOP} = none ] && echo none || echo ${DEFAULT_TOOLSET}; }
-default_version() { echo ${BRANCH:-$DEFAULT_BRANCH} | sed "s/^kali-//"; }
+default_version() { echo ${BRANCH:-$DEFAULT_BRANCH} | sed "s/^threat-//"; }
 
 ## Output bold only if both stdout/stderr are opened on a terminal
 if [ -t 1 ] && [ -t 2 ]; then
@@ -51,7 +51,7 @@ vrun() { echo -n "[$( date -u +'%H:%M:%S' )] ${VARIANT}:~${PROMPT} "; b "$@"; ec
 warn() { echo "WARNING: " "$@" 1>&2; }
 fail() { echo "ERROR: "   "$@" 1>&2; exit 1; }
 
-kali_message() {
+threat_message() {
   local line=
   echo   "┏━━($( b $@ ))"
   while IFS= read -r line; do
@@ -120,8 +120,8 @@ check_os() {
   [ -e "/usr/share/debootstrap/scripts/${BRANCH}" ] \
     || fail "debootstrap has no script for: ${BRANCH}. Need to use a newer debootstrap"
 
-  [ -e "/usr/share/keyrings/kali-archive-keyring.gpg" ] \
-    || fail "Missing /usr/share/keyrings/kali-archive-keyring.gpg (See README.md -> Non-Kali Debian-Based Environment)"
+  [ -e "/usr/share/keyrings/threat-archive-keyring.gpg" ] \
+    || fail "Missing /usr/share/keyrings/threat-archive-keyring.gpg (See README.md -> Non-Threat Debian-Based Environment)"
 }
 
 ## rootfs_chroot <cmd>
@@ -166,7 +166,7 @@ create_rootfs() {
       ${cmd_args} \
       --arch "${ARCH}" \
       --components=main,contrib,non-free,non-free-firmware \
-      --include=kali-archive-keyring \
+      --include=threat-archive-keyring \
       "${BRANCH}" \
       "${rootfsDir}"/ \
       "${MIRROR}" \
@@ -231,13 +231,13 @@ if [ -d /etc/profile.d ]; then
 fi
 EOF
 
- #rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install kali-defaults # Skipping: --no-install-recommends
-  rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install kali-linux-wsl
+ #rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install threat-defaults # Skipping: --no-install-recommends
+  rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install threat-linux-wsl
 
   [ "${TOOLSET}" != "none" ] && \
-    rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install kali-linux-${TOOLSET}
+    rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install threat-linux-${TOOLSET}
   [ "${DESKTOP}" != "none" ] && \
-    rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install kali-desktop-${DESKTOP} xorg xrdp
+    rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install threat-desktop-${DESKTOP} xorg xrdp
   [ "${PACKAGES}" ] && \
     rootfs_chroot env DEBIAN_FRONTEND=noninteractive apt-get --quiet --yes install ${PACKAGES}
 
@@ -249,13 +249,13 @@ EOF
   ## Using pipes with vrun doesn't work too well
   #echo "deb ${DEFAULT_MIRROR} ${BRANCH} main contrib non-free non-free-firmware" > "${rootfsDir}"/etc/apt/sources.list
   cat << EOF > "${rootfsDir}"/etc/apt/sources.list
-# See: https://www.kali.org/docs/general-use/kali-linux-sources-list-repositories/
+# See: https://www.threatcode.github.io/docs/general-use/threat-linux-sources-list-repositories/
 deb ${DEFAULT_MIRROR} ${BRANCH} main contrib non-free non-free-firmware
 
 # Additional line for source packages
 #deb-src ${DEFAULT_MIRROR} ${BRANCH} main contrib non-free non-free-firmware
 EOF
-  echo "kali" > "${rootfsDir}"/etc/hostname
+  echo "threat" > "${rootfsDir}"/etc/hostname
   #echo "127.0.0.1 localhost" > "${rootfsDir}"/etc/hosts
   cat << EOF > "${rootfsDir}"/etc/hosts
 127.0.0.1 localhost
@@ -295,12 +295,12 @@ EOF
 
 USAGE="Usage: $( basename $0 ) <options>
 
-Build a Kali Linux ${VARIANT} rootfs
+Build a Threat Linux ${VARIANT} rootfs
 
 Build options:
   -a ARCH     Build an rootfs for this architecture, default: $( b ${DEFAULT_ARCH} )
               Supported values: ${SUPPORTED_ARCHITECTURES}
-  -b BRANCH   Kali branch used to build the rootfs, default: $( b ${DEFAULT_BRANCH} )
+  -b BRANCH   Threat branch used to build the rootfs, default: $( b ${DEFAULT_BRANCH} )
               Supported values: ${SUPPORTED_BRANCHES}
   -k          Keep intermediary build artifacts
   -m MIRROR   Mirror used to build the rootfs, default: $( b ${DEFAULT_MIRROR} )
@@ -342,7 +342,7 @@ shift $((OPTIND - 1))
 [ "${TOOLSET}" ] || TOOLSET=$( default_toolset )
 [ "${VERSION}" ] || VERSION=$( default_version )
 
-TOOLSET="$( echo ${TOOLSET} | sed 's/kali-linux-//' )"
+TOOLSET="$( echo ${TOOLSET} | sed 's/threat-linux-//' )"
 
 case $( echo ${ARCH}| tr '[:upper:]' '[:lower:]' ) in
   x64|x86_64|x86-64|amd64)
@@ -354,8 +354,8 @@ case $( echo ${ARCH}| tr '[:upper:]' '[:lower:]' ) in
 esac
 
 case ${BRANCH} in
-  kali-last-release|kali-last-snapshot)
-    BRANCH=kali-last-snapshot
+  threat-last-release|threat-last-snapshot)
+    BRANCH=threat-last-snapshot
     ;;
 esac
 
@@ -364,7 +364,7 @@ PACKAGES=$( echo ${PACKAGES} | sed "s/[, ]\+/\n/g" | LC_ALL=C sort -u \
   | awk 'ORS=", "' | sed "s/[, ]*$//" )
 
 ## Filename structure for final file
-OUTPUT=$( echo "kali-linux-${VERSION}-${VARIANT}-rootfs-${ARCH}" | tr '[:upper:]' '[:lower:]' )
+OUTPUT=$( echo "threat-linux-${VERSION}-${VARIANT}-rootfs-${ARCH}" | tr '[:upper:]' '[:lower:]' )
 
 ## Validate some options
 echo "${SUPPORTED_BRANCHES}" | grep -qw "${BRANCH}" \
@@ -412,7 +412,7 @@ else
 fi
 
 echo "# ${VARIANT} rootfs output:"
-echo " * Build a Kali Linux ${VARIANT} rootfs for $( b ${ARCH} ) architecture"
+echo " * Build a Threat Linux ${VARIANT} rootfs for $( b ${ARCH} ) architecture"
 echo "# Build options:"
 [ "${MIRROR}"   ] && echo " * Build mirror: $( b ${MIRROR} )"
 [ "${BRANCH}"   ] && echo " * Branch: $( b ${BRANCH} )"
@@ -421,7 +421,7 @@ echo "# Build options:"
 [ "${TOOLSET}"  ] && echo " * Tool selection: $( b ${TOOLSET} )"
 [ "${PACKAGES}" ] && echo " * Additional packages: $( b ${PACKAGES} )"
   "${KEEP}"       && echo " * Keep temporary files: $( b ${KEEP} )"
-} | kali_message "Kali Linux ${VARIANT} rootfs"
+} | threat_message "Threat Linux ${VARIANT} rootfs"
 
 ## Ask for confirmation before starting the build
 ask_confirmation || { echo "Abort"; exit 1; }

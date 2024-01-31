@@ -9,7 +9,7 @@ set -eu
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 CONTAINER=${CONTAINER:-}
-IMAGE=kali-build/kali-wsl-rootfs
+IMAGE=threat-build/threat-wsl-rootfs
 OPTS=()
 SUDO=
 
